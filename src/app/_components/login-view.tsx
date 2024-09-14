@@ -1,5 +1,6 @@
 'use client'
 
+import Link from "next/link"
 import { useState } from "react"
 import { Button } from "~/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
@@ -7,6 +8,8 @@ import { Checkbox } from "~/components/ui/checkbox"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { GithubIcon, Mail } from "lucide-react"
+import { signIn } from "next-auth/react"
+import { FaGoogle } from "react-icons/fa"
 
 export function LoginViewComponent() {
   const [email, setEmail] = useState("")
@@ -17,6 +20,10 @@ export function LoginViewComponent() {
     // Handle login logic here
     console.log("Login attempted with:", { email, password })
   }
+
+  const handleGoogleLogin = () => {
+    signIn("google", { callbackUrl: "/dashboard" });
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -76,10 +83,16 @@ export function LoginViewComponent() {
               <GithubIcon className="mr-2 h-4 w-4" />
               Github
             </Button>
-            <Button variant="outline">
-              <Mail className="mr-2 h-4 w-4" />
-              Google
-            </Button>
+
+            <Link href="/api/auth/callback/google" passHref>
+              <Button 
+                variant="outline"
+                onClick={handleGoogleLogin}
+              >
+                <FaGoogle className="mr-2 h-4 w-4" />
+                Google
+              </Button>
+            </Link>
           </div>
         </div>
       </CardFooter>
