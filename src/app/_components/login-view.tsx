@@ -1,57 +1,68 @@
-'use client'
+"use client";
 
-import Link from "next/link"
-import { useState } from "react"
-import { Button } from "~/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card"
-import { Checkbox } from "~/components/ui/checkbox"
-import { Input } from "~/components/ui/input"
-import { Label } from "~/components/ui/label"
-import { GithubIcon, Mail } from "lucide-react"
-import { signIn } from "next-auth/react"
-import { FaGoogle } from "react-icons/fa"
+import Link from "next/link";
+import { useState } from "react";
+import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { GithubIcon } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { FaGoogle } from "react-icons/fa";
+import SigninGoogle from "./signin_google";
+import SigninGit from "./signin_git";
 
 export function LoginViewComponent() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Handle login logic here
-    console.log("Login attempted with:", { email, password })
-  }
+    console.log("Login attempted with:", { email, password });
+  };
 
   const handleGoogleLogin = () => {
-    signIn("google", { callbackUrl: "/dashboard" });
+    signIn("google", { callbackUrl: "/" });
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="mx-auto w-full max-w-md">
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">Login</CardTitle>
-        <CardDescription>Enter your email and password to login to your account</CardDescription>
+        <CardDescription>
+          Enter your email and password to login to your account
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              placeholder="Write your email here" 
+            <Input
+              id="email"
+              type="email"
+              placeholder="Write your email here"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required 
+              required
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input 
-              id="password" 
+            <Input
+              id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required 
+              required
             />
           </div>
           <div className="flex items-center justify-between">
@@ -75,27 +86,18 @@ export function LoginViewComponent() {
               <span className="w-full border-t" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+              <span className="bg-background px-2 text-muted-foreground">
+                Or continue with
+              </span>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Button variant="outline">
-              <GithubIcon className="mr-2 h-4 w-4" />
-              Github
-            </Button>
+            <SigninGit />
 
-            <Link href="/api/auth/callback/google" passHref>
-              <Button 
-                variant="outline"
-                onClick={handleGoogleLogin}
-              >
-                <FaGoogle className="mr-2 h-4 w-4" />
-                Google
-              </Button>
-            </Link>
+            <SigninGoogle />
           </div>
         </div>
       </CardFooter>
     </Card>
-  )
+  );
 }
