@@ -5,7 +5,11 @@ import { Button } from "~/components/ui/button";
 
 export default function Signout() {
   return (
-    <Button variant="default" className="mt-4 w-full" onClick={() => signOut()}>
+    <Button
+      variant="default"
+      className="mt-4 w-full"
+      onClick={() => signOut({ callbackUrl: "/" })}
+    >
       {" "}
       Sign Out
     </Button>

@@ -15,7 +15,7 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <div className="- mx-6 my-2 flex min-h-screen max-w-full flex-col rounded-lg p-60">
+      <div className="mx-6 my-2 flex min-h-screen max-w-full flex-col rounded-lg p-20">
         <LoginViewComponent />
 
         {session && <h1>Logged in as {session.user?.name}</h1>}
