@@ -17,7 +17,7 @@ export default async function Home() {
     <HydrateClient>
       <div className="- mx-6 my-2 flex min-h-screen max-w-full flex-col rounded-lg p-60">
         <LoginViewComponent />
-        
+
         {session && <h1>Logged in as {session.user?.name}</h1>}
         {session && <p>Email: {session.user?.email}</p>}
 
@@ -28,8 +28,6 @@ export default async function Home() {
           {session ? "Sign out" : "Sign in"}
         </Link>
       </div>
-
-      {session?.user && <LatestPost />}
     </HydrateClient>
   );
 }

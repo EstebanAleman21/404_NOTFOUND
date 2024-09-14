@@ -9,6 +9,7 @@ import { type Adapter } from "next-auth/adapters";
 import { env } from "~/env";
 import { db } from "~/server/db";
 import GoogleProvider from "next-auth/providers/google";
+import GitHub from "next-auth/providers/github";
 // ...
 
 export const authOptions: NextAuthOptions = {
@@ -27,6 +28,10 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
+    }),
+    GitHub({
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
     }),
   ],
 };
