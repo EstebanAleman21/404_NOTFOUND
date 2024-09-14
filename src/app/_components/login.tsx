@@ -25,11 +25,14 @@ const login = () => {
           <CardTitle className="mb-3 text-3xl">Login</CardTitle>
           <CardDescription>Login to enter dashboard</CardDescription>
         </CardHeader>
+
         <CardContent>
+          
+          <CardDescription>LogIn with third party apps</CardDescription>
           <Link href="/api/auth/callback/google" passHref>
             <Button
               variant="outline"
-              className="w-full"
+              className="w-full rounded-full mt-5"
               onClick={handleGoogleLogin}
             >
               <FaGoogle className="mx-3" /> Login with Google
