@@ -45,6 +45,12 @@ export default function CategorySelectorComponent() {
         }
     }
 
+    const handleCustomCategoryInput = (index: number, event: React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
+        if (event.type === 'blur' || (event as React.KeyboardEvent).key === 'Enter') {
+            handleCustomCategory(index, customCategory)
+        }
+    }
+
     const availableCategories = (index: number) =>
         [...fixedCategories, 'custom'].filter(cat =>
             !categories.includes(cat) || categories[index] === cat
@@ -70,7 +76,6 @@ export default function CategorySelectorComponent() {
         }
     };
 
-
     useEffect(() => {
       const updateCategories = async () => {
         await updateUserCategoriesInDB(categories.filter(cat => cat !== ''));
@@ -80,7 +85,7 @@ export default function CategorySelectorComponent() {
       });
     }, [categories]);
     
-      return (
+    return (
         <div className="space-y-4 p-4 max-w-md mx-auto">
           <h2 className="text-2xl font-bold mb-4">Select Expense Categories</h2>
           {categories.map((category, index) => (
@@ -111,7 +116,8 @@ export default function CategorySelectorComponent() {
                   placeholder="Enter custom category"
                   value={customCategory}
                   onChange={(e) => setCustomCategory(e.target.value)}
-                  onBlur={() => handleCustomCategory(index, customCategory)}
+                  onBlur={(e) => handleCustomCategoryInput(index, e)}
+                  onKeyDown={(e) => handleCustomCategoryInput(index, e)}
                   className="flex-grow mt-1"
                 />
               )}
