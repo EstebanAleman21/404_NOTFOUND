@@ -1,17 +1,16 @@
-// fillMerchants.js
+// fillWithMerchants.js
 import fetch from 'node-fetch';
 import { PrismaClient } from '@prisma/client';
-import { Interface } from 'readline';
 const prisma = new PrismaClient();
 
-// Interfaz de los datos de los comercios
-
+// Función para obtener los datos de los comercios
 async function fetchMerchants() {
   const response = await fetch(`http://api.nessieisreal.com/merchants?key=${process.env.NESSIE_API_KEY}`);
   if (!response.ok) {
     throw new Error("Failed to fetch merchants");
   }
-  return response.json();
+  const merchants = await response.json();
+  return merchants;
 }
 
 async function fillMerchants() {
@@ -20,8 +19,13 @@ async function fillMerchants() {
     const merchantData = merchants.map(merchant => ({
       id: merchant._id,
       name: merchant.name,
+      categories: Array.isArray(merchant.category) ? merchant.category : [merchant.category],
     }));
 
+    // Borrar los datos existentes en la tabla de merchants
+    await prisma.merchant.deleteMany();
+
+    // Insertar los nuevos datos
     for (const merchant of merchantData) {
       await prisma.merchant.create({
         data: merchant,
