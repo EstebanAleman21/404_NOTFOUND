@@ -83,6 +83,7 @@ export default function MinimalistCardDashboard() {
     void fetchRewards();
   }, [session?.user?.account_id]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
   const handlePieEnter = (data: any, index: number) => {
     setHoveredSegment(data.name);
   };
@@ -111,7 +112,7 @@ export default function MinimalistCardDashboard() {
     { name: "Transportation", value: 40000 }, // Example income
     { name: "Services", value: 25000 },
     { name: "Subscriptions", value: 20000 },
-    { name: "Minor Expenses", value: 5000 } // Example expenses
+    { name: "Minor Expenses", value: 5000 }, // Example expenses
   ];
   const COLORS = ["#00823E", "#00C49F", "#FFBB28", "#FF8042"];
 

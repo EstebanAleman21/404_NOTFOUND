@@ -5,6 +5,7 @@ import { Home, BarChart2, Users, Settings } from "lucide-react";
 import { useSession } from "next-auth/react"; // Import the useSession hook
 import { cn } from "~/lib/utils";
 import Signout from "./sign-out";
+import { usePathname } from "next/navigation"; // Import Next.js's usePathname hook
 
 type NavItem = {
   icon: React.ElementType;
@@ -14,13 +15,21 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { icon: Home, label: "Dashboard", href: "/dashboard" },
-  { icon: BarChart2, label: "Categories", href: "/category-selector" },
-  { icon: Users, label: "Budget", href: "/budget-entry" },
-  { icon: Settings, label: "Settings", href: "/settings" },
+  {
+    icon: BarChart2,
+    label: "Categories",
+    href: "/dashboard/category-selector",
+  },
+  { icon: Users, label: "Budget", href: "/dashboard/budget-entry" },
+  { icon: Settings, label: "Settings", href: "/dashboard/settings" },
 ];
 
 export default function Sidebar() {
   const { data: session } = useSession(); // Dynamically fetch session data
+  const pathname = usePathname(); // Get the current route
+
+  // If there's no session, don't show the sidebar
+  if (!session) return null;
 
   return (
     <div className="flex h-screen flex-col border-r border-gray-200 bg-white">
@@ -56,7 +65,8 @@ export default function Sidebar() {
                   "flex items-center space-x-3 rounded-lg px-3 py-2 text-sm",
                   "text-gray-700 hover:bg-gray-100 hover:text-gray-900",
                   "transition-colors duration-200",
-                  index === 0 && "bg-gray-100 text-gray-900",
+                  // Highlight the active page based on the current pathname
+                  pathname === item.href && "bg-gray-100 text-gray-900",
                 )}
               >
                 <item.icon className="h-5 w-5" />

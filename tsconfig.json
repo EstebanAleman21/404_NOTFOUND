@@ -36,7 +36,8 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.js",
-    ".next/types/**/*.ts"
-, "src/app/category-selector"  ],
+    ".next/types/**/*.ts",
+    "src/app/dashboard/category-selector"
+  ],
   "exclude": ["node_modules"]
 }
