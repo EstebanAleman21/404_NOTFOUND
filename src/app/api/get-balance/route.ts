@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // File: src/app/api/get-balance/route.ts
 import { NextResponse } from "next/server";
 

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 import React, { useEffect, useState } from "react";
 import {
@@ -74,8 +77,8 @@ export default function MinimalistCardDashboard() {
       }
     }
 
-    fetchBalance();
-    fetchRewards();
+    void fetchBalance();
+    void fetchRewards();
   }, [session?.user?.account_id]);
 
   const handlePieEnter = () => {

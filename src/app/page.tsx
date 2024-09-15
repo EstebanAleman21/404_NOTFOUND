@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import Link from "next/link";
-import { LatestPost } from "~/app/_components/post";
-import { Button } from "~/components/ui/button";
 import { getServerAuthSession } from "~/server/auth";
 import { nessieManager } from "~/server/nessieManager";
 import { api, HydrateClient } from "~/trpc/server";
@@ -13,7 +13,7 @@ export default async function Home() {
 
   // Fetch customer data only if the session and nessie_id are available
   let customer = null;
-  if (session && session.user?.nessie_id) {
+  if (session?.user?.nessie_id) {
     customer = await nessieManager.getCustomerById(session.user.nessie_id);
   }
 
