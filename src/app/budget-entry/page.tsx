@@ -16,7 +16,7 @@ const expenseCategories = [
 
 type Budget = Record<number, number>
 
-export function BudgetEntry() {
+export default function BudgetEntry() {
   const [budget, setBudget] = useState<Budget>({})
 
   const handleBudgetChange = (categoryId: number, amount: string) => {
@@ -49,7 +49,7 @@ export function BudgetEntry() {
                 <Input
                   type="number"
                   placeholder="Enter amount"
-                  value={budget[category.id] || ''}
+                  value={budget[category.id] ?? ''}
                   onChange={(e) => handleBudgetChange(category.id, e.target.value)}
                   className="mr-2"
                 />
