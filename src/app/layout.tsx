@@ -9,11 +9,19 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"; // Imp
 // Create a QueryClient instance
 const queryClient = new QueryClient();
 
+const metadata = { title: "Fintrack", icon: "/favicon.ico" };
+
 export default function ClientLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
+      <head>
+        {/* Set the title dynamically */}
+        <title>{metadata.title}</title>
+        {/* Set the favicon */}
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className="h-screen overflow-hidden">
         {/* Wrap everything in QueryClientProvider */}
         <QueryClientProvider client={queryClient}>
