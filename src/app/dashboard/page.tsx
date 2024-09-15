@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -26,7 +28,8 @@ export default function MinimalistCardDashboard() {
   const [loading, setLoading] = useState(true); // State to handle loading
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
-  const [hoveredSegment, setHoveredSegment] = useState<string | null>(null); // State to store the hovered segment
+  const [hoveredSegment, setHoveredSegment] = useState<string | null>(null);
+  const [hoveredValue, setHoveredValue] = useState<number | null>(null); // State to store the hovered segment
 
   // Fetch the balance when the accountId is available
   useEffect(() => {
@@ -99,13 +102,17 @@ export default function MinimalistCardDashboard() {
     void fetchRewards();
   }, [session?.user?.account_id]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-  const handlePieEnter = (data: any, index: number) => {
-    setHoveredSegment(data.name);
+  // Handle mouse enter to update the hovered segment and value
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handlePieEnter = (entry: any) => {
+    setHoveredSegment(entry.name);
+    setHoveredValue(entry.value); // Access the correct value of the hovered segment
   };
 
+  // Handle mouse leave to reset the hovered segment and value
   const handlePieLeave = () => {
     setHoveredSegment(null);
+    setHoveredValue(null);
   };
 
   // Mock data for the revenue chart
@@ -213,8 +220,6 @@ export default function MinimalistCardDashboard() {
           </CardHeader>
           <CardContent className="p-6">
             <div className="flex h-[400px] items-center justify-center">
-              {" "}
-              {/* Make the pie chart container bigger */}
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart
                   width={400}
@@ -224,33 +229,36 @@ export default function MinimalistCardDashboard() {
                 >
                   <Pie
                     data={data}
-                    cx="50%" // Center the PieChart horizontally
-                    cy="50%" // Center the PieChart vertically
-                    innerRadius={120} // Increase the size of the inner radius
-                    outerRadius={160} // Increase the size of the outer radius
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={120}
+                    outerRadius={160}
                     fill="#8884d8"
                     paddingAngle={5}
                     dataKey="value"
                     onMouseEnter={handlePieEnter}
                     onMouseLeave={handlePieLeave}
                   >
-                    {/* Add Labels for Ingresos and Gastos */}
+                    {/* Conditionally render the labels based on hover state */}
                     <Label
-                      value={`Ingresos: $${totalIngresos}`}
-                      position="centerTop" // Position for the top label
-                      dy={-20} // Move the label upwards to add space
+                      value={
+                        hoveredSegment
+                          ? `${hoveredSegment}: $${hoveredValue}`
+                          : `Ingresos: $${totalIngresos}`
+                      }
+                      position="centerTop"
+                      dy={-20}
                       style={{
-                        fill: "#0088FE",
+                        fill: hoveredSegment ? "#000" : "#0088FE",
                         fontSize: "18px",
                         fontWeight: "bold",
                         textAlign: "center",
-                        color: "green",
                       }}
                     />
                     <Label
-                      value={`Gastos: $${totalGastos}`}
-                      position="centerBottom" // Position for the bottom label
-                      dy={20} // Move the label downwards to add space
+                      value={hoveredSegment ? "" : `Gastos: $${totalGastos}`}
+                      position="centerBottom"
+                      dy={20}
                       style={{
                         fill: "#FF8042",
                         fontSize: "18px",
@@ -270,15 +278,9 @@ export default function MinimalistCardDashboard() {
                     layout="horizontal"
                     verticalAlign="bottom"
                     align="center"
-                  />{" "}
-                  {/* Add the Legend */}
+                  />
                 </PieChart>
               </ResponsiveContainer>
-              {hoveredSegment && (
-                <div className="absolute text-lg font-semibold text-gray-700">
-                  {hoveredSegment}
-                </div>
-              )}
             </div>
           </CardContent>
         </Card>
