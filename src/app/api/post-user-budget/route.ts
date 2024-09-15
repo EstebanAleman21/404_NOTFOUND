@@ -31,7 +31,16 @@ export async function POST(request: Request) {
     });
 
     if (existingCategory) {
-      return NextResponse.json({ success: false, message: 'Category already exists' }, { status: 400 });
+      // Actualizar isValid a true si la categoría ya existe
+      await prisma.budget.update({
+        where: {
+          id: existingCategory.id,
+        },
+        data: {
+          isValid: true,
+        },
+      });
+      return NextResponse.json({ success: true, message: 'Category updated to valid' });
     }
 
     // Crear la nueva categoría si no existe

@@ -29,9 +29,30 @@ export default function BudgetEntry() {
     }
   }
 
+  const updateBudgetStatus = async () => {
+    try {
+      const response = await fetch('/api/update-budget-status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to update budget status. Status: ${response.status}`)
+      }
+      console.log('Budget status updated successfully')
+    } catch (error) {
+      console.error('Error updating budget status:', error)
+    }
+  }
+
   useEffect(() => {
-    fetchActiveBudgets().catch(error => {
-      console.error('Error fetching budgets:', error)
+    const updateAndFetchBudgets = async () => {
+      await updateBudgetStatus()
+      await fetchActiveBudgets()
+    }
+    updateAndFetchBudgets().catch(error => {
+      console.error('Error updating and fetching budgets:', error)
     });
   }, [])
 
