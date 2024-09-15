@@ -115,7 +115,7 @@ export default function CategorySelectorComponent() {
                   className="flex-grow mt-1"
                 />
               )}
-              {(categories.filter(cat => cat !== '').length > 1 || index > 0) && category !== '' && (
+              {category !== '' && (
                 <Button
                   variant="outline"
                   size="icon"
