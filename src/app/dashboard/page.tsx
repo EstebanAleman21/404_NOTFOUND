@@ -306,12 +306,12 @@ export default function MinimalistCardDashboard() {
                       {transaction.description}
                     </p>
                     <p className="text-xs text-gray-500">
-                      {transaction.status === "executed" ? "Paid" : "Pending"}
+                      {transaction.status === "completed" ? "Paid" : "Pending"}
                     </p>
                   </div>
                   <div
                     className={`font-light ${
-                      transaction.status === "executed"
+                      transaction.status === "completed"
                         ? "text-green-600"
                         : "text-red-600"
                     }`}
