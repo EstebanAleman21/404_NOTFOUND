@@ -110,9 +110,9 @@ export default function MinimalistCardDashboard() {
 
   // Mock data for the revenue chart
   const revenueData = [
-    { name: "Apr", total: 25000 },
-    { name: "May", total: 30000 },
-    { name: "Jun", total: 28000 },
+    { name: "Jun", total: 10000 },
+    { name: "Jul", total: 17500 },
+    { name: "Aug", total: 15300 },
   ];
 
   // Mock data for pie chart with income and expenses
@@ -177,7 +177,7 @@ export default function MinimalistCardDashboard() {
         <Card className="mb-12 bg-white shadow-sm transition-shadow duration-300 hover:shadow-md">
           <CardHeader>
             <CardTitle className="text-xl font-light text-gray-800">
-              Revenue Trend
+              Total expenses
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
@@ -198,7 +198,7 @@ export default function MinimalistCardDashboard() {
                     axisLine={false}
                     tickFormatter={(value) => `$${value / 1000}k`}
                   />
-                  <Bar dataKey="total" fill="#e0e0e0" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="total" fill="#84CDEE" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
