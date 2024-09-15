@@ -62,6 +62,24 @@ export default function BudgetEntry() {
     ))
   }
 
+  const handleBlurOrEnter = async (budgetId: string, amount: string) => {
+    try {
+      const response = await fetch('/api/set-budget-amount', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ budgetId, amount: parseFloat(amount) || 0 })
+      })
+      if (!response.ok) {
+        throw new Error(`Failed to set budget amount. Status: ${response.status}`)
+      }
+      console.log('Budget amount set successfully')
+    } catch (error) {
+      console.error('Error setting budget amount:', error)
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Submitted budgets:', budgets)
@@ -84,9 +102,15 @@ export default function BudgetEntry() {
                 <div className="flex items-center">
                   <Input
                     type="number"
-                    placeholder="Enter amount"
-                    value={budget.amount}
+                    placeholder={budget.amount.toString()}
                     onChange={(e) => handleBudgetChange(budget.id, e.target.value)}
+                    onBlur={(e) => handleBlurOrEnter(budget.id, e.target.value)}
+                    onKeyPress={async (e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        await handleBlurOrEnter(budget.id, e.currentTarget.value)
+                      }
+                    }}
                     className="mr-2"
                   />
                   <span className="text-sm text-gray-500">$</span>
