@@ -80,7 +80,7 @@ model Expense {
     userId      String
     amount      Float     // Cantidad del gasto
     description String    // Descripción del gasto
-    category    String    // Categoría del gasto (ej. Gastos hormiga, Servicios, etc.)
+    categories    String    // Categoría del gasto (ej. Gastos hormiga, Servicios, etc.)
     createdAt   DateTime  @default(now())
     merchant    Merchant? @relation(fields: [merchantId], references: [id])
     merchantId  String?
@@ -91,9 +91,10 @@ model Budget {
     id          String   @id @default(cuid())
     user        User     @relation(fields: [userId], references: [id])
     userId      String
-    categories  String[] // Categorias de los gastos 
+    category    String // Categorias de los gastos 
     amount      Float    // Monto asignado para la categoría
     period      String   // Puede ser "Mensual" o "Semanal"
+    isValid     Boolean
     createdAt   DateTime @default(now())
 }
 

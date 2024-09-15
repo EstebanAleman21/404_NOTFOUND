@@ -18,13 +18,40 @@ export default function CategorySelectorComponent() {
         }
     }, [categories])
 
-    const addCategory = (index: number, value: string) => {
+    const postUserBudget = async (category: string) => {
+        try {
+            const response = await fetch('/api/post-user-budget', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    amount: 0, // Valor por defecto
+                    period: 'Weekly', // Valor por defecto
+                    category,
+                    isValid: true // Valor por defecto
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to post budget. Status: ${response.status}`);
+            }
+
+            console.log('Budget posted successfully');
+        } catch (error) {
+            console.error('Error posting budget:', error);
+        }
+    };
+
+    const addCategory = async (index: number, value: string) => {
         if (categories.length <= 5 && !categories.includes(value)) {
             const newCategories = [...categories]
             newCategories[index] = value
             setCategories(newCategories)
             if (value === 'custom') {
                 setCustomCategory('')
+            } else {
+                await postUserBudget(value); // Llama a la API después de agregar la categoría
             }
         }
     }
@@ -36,18 +63,19 @@ export default function CategorySelectorComponent() {
         }
     }
 
-    const handleCustomCategory = (index: number, value: string) => {
+    const handleCustomCategory = async (index: number, value: string) => {
         if (value && !categories.includes(value)) {
             const newCategories = [...categories]
             newCategories[index] = value
             setCategories(newCategories)
             setCustomCategory('')
+            await postUserBudget(value); // Llama a la API después de agregar la categoría personalizada
         }
     }
 
-    const handleCustomCategoryInput = (index: number, event: React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
+    const handleCustomCategoryInput = async (index: number, event: React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
         if (event.type === 'blur' || (event as React.KeyboardEvent).key === 'Enter') {
-            handleCustomCategory(index, customCategory)
+            await handleCustomCategory(index, customCategory)
         }
     }
 
