@@ -1,4 +1,5 @@
-import { DefaultSession, DefaultUser } from "next-auth";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { type DefaultSession, DefaultUser } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
@@ -13,5 +14,6 @@ declare module "next-auth" {
   interface User {
     // Add your custom fields here
     nessie_id?: string;
+    account_id?: string;
   }
 }

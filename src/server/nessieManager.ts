@@ -1,18 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { env } from "~/env";
 
 export const nessieManager = {
   async getCustomerById(id: string) {
     const response = await fetch(
-      `http://api.nessieisreal.com/customers/${id}/accounts?key=${env.NESSIE_API_KEY}`,
+      `http://api.nessieisreal.com/customers/${id}?key=${env.NESSIE_API_KEY}`,
     );
 
-    // Log response status and body for debugging
-    console.log("Response Status:", response.status);
-    console.log("Response Body:", await response.text());
-
     if (!response.ok) {
-      throw new Error(`Failed to fetch customers. Status: ${response.status}`);
+      throw new Error(`Failed to fetch customer. Status: ${response.status}`);
     }
 
     return response.json();
@@ -61,5 +58,19 @@ export const nessieManager = {
     }
 
     return response.json();
+  },
+  async getBalanceByAccountIdCredit(accountId: string) {
+    const response = await fetch(
+      `http://api.nessieisreal.com/accounts/${accountId}?key=${env.NESSIE_API_KEY}`,
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch balance");
+    }
+
+    const jsonData = await response.json();
+    console.log("Response JSON:", jsonData);
+    console.log("Account ID:", accountId);
+
+    return jsonData;
   },
 };

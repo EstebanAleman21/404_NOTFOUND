@@ -1,9 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import {
-  getServerSession,
-  type DefaultSession,
-  type NextAuthOptions,
-} from "next-auth";
+import { getServerSession, type NextAuthOptions } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
 
 import { env } from "~/env";
@@ -21,6 +17,7 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
         email: user.email,
         nessie_id: user.nessie_id,
+        account_id: user.account_id,
       },
     }),
   },
