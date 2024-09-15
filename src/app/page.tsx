@@ -8,7 +8,6 @@ import Login from "~/app/_components/login";
 import { LoginViewComponent } from "./_components/login-view";
 
 export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
   const session = await getServerAuthSession();
 
   void api.post.getLatest.prefetch();
@@ -20,6 +19,7 @@ export default async function Home() {
 
         {session && <h1>Logged in as {session.user?.name}</h1>}
         {session && <p>Email: {session.user?.email}</p>}
+        {session && <p>Nessie: {session.user?.nessie_id}</p>}
 
         <Link
           href={session ? "/api/auth/signout" : "/api/auth/signin"}

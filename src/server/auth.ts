@@ -20,6 +20,7 @@ export const authOptions: NextAuthOptions = {
         ...session.user,
         id: user.id,
         email: user.email,
+        nessie_id: user.nessie_id,
       },
     }),
   },
