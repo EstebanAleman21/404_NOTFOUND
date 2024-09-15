@@ -49,7 +49,7 @@ export function BudgetEntry() {
                 <Input
                   type="number"
                   placeholder="Enter amount"
-                  value={budget[category.id] || ''}
+                  value={budget[category.id] ?? ''}
                   onChange={(e) => handleBudgetChange(category.id, e.target.value)}
                   className="mr-2"
                 />

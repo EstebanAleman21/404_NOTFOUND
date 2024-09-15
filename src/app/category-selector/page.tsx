@@ -6,9 +6,9 @@ import { Input } from "~/components/ui/input"
 import { Button } from "~/components/ui/button"
 import { X } from "lucide-react"
 
-const fixedCategories = ['Food', 'Transportation', 'Housing', 'Entertainment', 'Utilities']
+const fixedCategories = ['Super Maket', 'Transportation', 'Services', 'Subscriptions', 'Minor Expenses']
 
-export function CategorySelectorComponent() {
+export default function CategorySelectorComponent() {
   const [categories, setCategories] = useState<string[]>([''])
   const [customCategory, setCustomCategory] = useState('')
 

@@ -13,9 +13,9 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { icon: Home, label: "Dashboard", href: "/" },
-  { icon: BarChart2, label: "Analytics", href: "/analytics" },
-  { icon: Users, label: "Customers", href: "/customers" },
+  { icon: Home, label: "Dashboard", href: "/dashboard" },
+  { icon: BarChart2, label: "Categories", href: "/category-selector" },
+  { icon: Users, label: "Budget", href: "/customers" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
