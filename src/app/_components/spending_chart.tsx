@@ -9,7 +9,7 @@ const data = [
   { name: "Transport", value: 5 },
 ];
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = ["#00823E", "#00C49F", "#FFBB28", "#FF8042"];
 
 const SpendingChart = () => (
   <ResponsiveContainer width="100%" height={200}>

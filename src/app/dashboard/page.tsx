@@ -14,6 +14,7 @@ import {
   YAxis,
   Legend,
   Label,
+  Tooltip,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { useSession } from "next-auth/react"; // Import useSession from NextAuth
@@ -23,6 +24,7 @@ export default function MinimalistCardDashboard() {
   const [balance, setBalance] = useState(0); // State to store the fetched balance
   const [rewards, setRewards] = useState(0); // State to store the fetched rewards
   const [loading, setLoading] = useState(true); // State to handle loading
+  const [hoveredSegment, setHoveredSegment] = useState<string | null>(null); // State to store the hovered segment
 
   // Fetch the balance when the accountId is available
   useEffect(() => {
@@ -81,8 +83,12 @@ export default function MinimalistCardDashboard() {
     void fetchRewards();
   }, [session?.user?.account_id]);
 
-  const handlePieEnter = () => {
-    // Handle event here, if needed
+  const handlePieEnter = (data: any, index: number) => {
+    setHoveredSegment(data.name);
+  };
+
+  const handlePieLeave = () => {
+    setHoveredSegment(null);
   };
 
   const recentTransactions = [
@@ -102,10 +108,12 @@ export default function MinimalistCardDashboard() {
 
   // Mock data for pie chart with income and expenses
   const data = [
-    { name: "Ingresos", value: 40000 }, // Example income
-    { name: "Gastos", value: 25000 }, // Example expenses
+    { name: "Transportation", value: 40000 }, // Example income
+    { name: "Services", value: 25000 },
+    { name: "Subscriptions", value: 20000 },
+    { name: "Minor Expenses", value: 5000 } // Example expenses
   ];
-  const COLORS = ["#0088FE", "#FF8042"];
+  const COLORS = ["#00823E", "#00C49F", "#FFBB28", "#FF8042"];
 
   // Total income and expenses with optional chaining and fallback to 0 if undefined
   const totalIngresos = data?.[0]?.value ?? 0;
@@ -203,6 +211,7 @@ export default function MinimalistCardDashboard() {
                   width={400}
                   height={400}
                   onMouseEnter={handlePieEnter}
+                  onMouseLeave={handlePieLeave}
                 >
                   <Pie
                     data={data}
@@ -213,6 +222,8 @@ export default function MinimalistCardDashboard() {
                     fill="#8884d8"
                     paddingAngle={5}
                     dataKey="value"
+                    onMouseEnter={handlePieEnter}
+                    onMouseLeave={handlePieLeave}
                   >
                     {/* Add Labels for Ingresos and Gastos */}
                     <Label
@@ -245,6 +256,7 @@ export default function MinimalistCardDashboard() {
                       />
                     ))}
                   </Pie>
+                  <Tooltip />
                   <Legend
                     layout="horizontal"
                     verticalAlign="bottom"
@@ -253,6 +265,11 @@ export default function MinimalistCardDashboard() {
                   {/* Add the Legend */}
                 </PieChart>
               </ResponsiveContainer>
+              {hoveredSegment && (
+                <div className="absolute text-lg font-semibold text-gray-700">
+                  {hoveredSegment}
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
