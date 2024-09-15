@@ -20,7 +20,7 @@ const navItems: NavItem[] = [
 ];
 
 export default function Sidebar() {
-  const { data: session, status } = useSession(); // Dynamically fetch session data
+  const { data: session } = useSession(); // Dynamically fetch session data
 
   return (
     <div className="flex h-screen flex-col border-r border-gray-200 bg-white">
@@ -28,17 +28,17 @@ export default function Sidebar() {
       <div className="border-b border-gray-200 p-6">
         <div className="flex items-center space-x-4">
           <img
-            src={session?.user?.image || "/placeholder.svg?height=40&width=40"} // Display user avatar or placeholder
+            src={session?.user?.image ?? "/placeholder.svg?height=40&width=40"} // Display user avatar or placeholder
             alt="User avatar"
             className="h-10 w-10 rounded-full"
           />
           <div>
             <h2 className="text-sm font-medium text-gray-800">
-              {session?.user?.name || "Guest"}{" "}
+              {session?.user?.name ?? "Guest"}{" "}
               {/* Display user's name or fallback to "Guest" */}
             </h2>
             <p className="text-xs text-gray-500">
-              {session?.user?.email || "No email available"}{" "}
+              {session?.user?.email ?? "No email available"}{" "}
               {/* Display user's email or fallback */}
             </p>
           </div>

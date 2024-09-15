@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { env } from "~/env";
 
 export const nessieManager = {
@@ -23,8 +24,7 @@ export const nessieManager = {
     },
 
     async getMerchants() {
-        const response = await fetch(`http://api.nessieisreal.com/merchants?key=${env
-    }`);
+        const response = await fetch(`http://api.nessieisreal.com/merchants?key=${env.NESSIE_API_KEY}`);
         if (!response.ok) {
             throw new Error("Failed to fetch merchants");
         }
