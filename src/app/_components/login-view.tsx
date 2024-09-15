@@ -30,8 +30,8 @@ export function LoginViewComponent() {
     console.log("Login attempted with:", { email, password });
   };
 
-  const handleGoogleLogin = () => {
-    signIn("google", { callbackUrl: "/" });
+  const handleGoogleLogin = async () => {
+    await signIn("google", { callbackUrl: "/" });
   };
 
   return (
