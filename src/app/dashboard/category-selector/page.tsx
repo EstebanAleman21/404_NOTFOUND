@@ -86,7 +86,7 @@ export default function CategorySelectorComponent() {
     
     const updateUserCategoriesInDB = async (newCategories: string[]) => {
         try {
-            const response = await fetch('api/update-user-categories', {
+            const response = await fetch('/api/update-user-categories', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
