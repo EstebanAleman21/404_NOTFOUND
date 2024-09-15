@@ -11,7 +11,7 @@ interface RequestBody {
 }
 
 
-export async function postUserBudget(request: Request) {
+export async function POST(request: Request) {
   const session = await getServerAuthSession();
   const prisma = new PrismaClient();
 
@@ -22,11 +22,11 @@ export async function postUserBudget(request: Request) {
   try {
     const body = await request.json() as unknown;
 
-    const { userId, amount, period, category, isValid } = body as RequestBody;
+    const { amount, period, category, isValid } = body as RequestBody;
 
     await prisma.budget.create({
       data: {
-        userId,
+        userId: session.user.id,
         amount,
         period,
         category,
