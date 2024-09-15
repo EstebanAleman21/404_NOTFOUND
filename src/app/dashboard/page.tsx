@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -13,33 +13,96 @@ import {
   Label,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-
-// Mock data for the revenue chart
-const revenueData = [
-  { name: "Apr", total: 25000 },
-  { name: "May", total: 30000 },
-  { name: "Jun", total: 28000 },
-];
-
-// Mock data for pie chart with income and expenses
-const data = [
-  { name: "Ingresos", value: 40000 }, // Example income
-  { name: "Gastos", value: 25000 }, // Example expenses
-];
-const COLORS = ["#0088FE", "#FF8042"];
-
-// Mock data for recent transactions
-const recentTransactions = [
-  { id: 1, name: "Payment from John Doe", amount: 500, type: "credit" },
-  { id: 2, name: "Office Supplies", amount: 150, type: "debit" },
-  { id: 3, name: "Payment from Jane Smith", amount: 750, type: "credit" },
-  { id: 4, name: "Server Costs", amount: 300, type: "debit" },
-];
+import { useSession } from "next-auth/react"; // Import useSession from NextAuth
 
 export default function MinimalistCardDashboard() {
+  const { data: session } = useSession(); // Fetch session data using useSession from NextAuth
+  const [balance, setBalance] = useState(0); // State to store the fetched balance
+  const [rewards, setRewards] = useState(0); // State to store the fetched rewards
+  const [loading, setLoading] = useState(true); // State to handle loading
+
+  // Fetch the balance when the accountId is available
+  useEffect(() => {
+    async function fetchBalance() {
+      if (session?.user?.account_id) {
+        console.log("Account ID being used:", session.user.account_id); // Add this line
+        try {
+          const accountId = session.user.account_id;
+          const response = await fetch(
+            `/api/get-balance?accountId=${accountId}`,
+          );
+
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch balance. Status: ${response.status}`,
+            );
+          }
+
+          const balanceData = await response.json();
+          setBalance(balanceData.balance || 0);
+        } catch (error) {
+          console.error("Failed to fetch balance:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    }
+
+    // Fetch the rewards when the accountId is available
+    async function fetchRewards() {
+      if (session?.user?.account_id) {
+        console.log("Account ID being used:", session.user.account_id); // Add this line
+        try {
+          const accountId = session.user.account_id;
+          const response = await fetch(
+            `/api/get-balance?accountId=${accountId}`,
+          );
+
+          if (!response.ok) {
+            throw new Error(
+              `Failed to fetch rewards. Status: ${response.status}`,
+            );
+          }
+
+          const rewardsData = await response.json();
+          setRewards(rewardsData.rewards ?? 0);
+        } catch (error) {
+          console.error("Failed to fetch rewards:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    }
+
+    fetchBalance();
+    fetchRewards();
+  }, [session?.user?.account_id]);
+
   const handlePieEnter = () => {
     // Handle event here, if needed
   };
+
+  const recentTransactions = [
+    { id: 1, name: "Payment to John Doe", amount: 500, type: "debit" },
+    { id: 2, name: "Payment to Jane Doe", amount: 700, type: "debit" },
+    { id: 3, name: "Payment from Acme Inc", amount: 1200, type: "credit" },
+    { id: 4, name: "Payment to XYZ Corp", amount: 300, type: "debit" },
+    { id: 5, name: "Payment to ABC Ltd", amount: 800, type: "debit" },
+  ]; // Mock data for recent transactions
+
+  // Mock data for the revenue chart
+  const revenueData = [
+    { name: "Apr", total: 25000 },
+    { name: "May", total: 30000 },
+    { name: "Jun", total: 28000 },
+  ];
+
+  // Mock data for pie chart with income and expenses
+  const data = [
+    { name: "Ingresos", value: 40000 }, // Example income
+    { name: "Gastos", value: 25000 }, // Example expenses
+  ];
+  const COLORS = ["#0088FE", "#FF8042"];
 
   // Total income and expenses with optional chaining and fallback to 0 if undefined
   const totalIngresos = data?.[0]?.value ?? 0;
@@ -56,21 +119,25 @@ export default function MinimalistCardDashboard() {
         <Card className="bg-white shadow-sm transition-shadow duration-300 hover:shadow-md">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-normal text-gray-500">
-              Total Revenue
+              Total balance
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-light text-gray-800">$45,231.89</div>
+            <div className="text-3xl font-light text-gray-800">
+              {loading ? "Loading..." : `$${balance.toFixed(2)}`}
+            </div>
           </CardContent>
         </Card>
         <Card className="bg-white shadow-sm transition-shadow duration-300 hover:shadow-md">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-normal text-gray-500">
-              New Customers
+              Rewards Balance
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-light text-gray-800">2,350</div>
+            <div className="text-3xl font-light text-gray-800">
+              {loading ? "Loading..." : `$${rewards.toFixed(2)}`}
+            </div>
           </CardContent>
         </Card>
         <Card className="bg-white shadow-sm transition-shadow duration-300 hover:shadow-md">

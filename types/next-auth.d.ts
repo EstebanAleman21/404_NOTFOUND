@@ -13,5 +13,6 @@ declare module "next-auth" {
   interface User {
     // Add your custom fields here
     nessie_id?: string;
+    account_id?: string;
   }
 }

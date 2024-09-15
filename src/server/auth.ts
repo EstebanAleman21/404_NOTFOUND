@@ -21,6 +21,7 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
         email: user.email,
         nessie_id: user.nessie_id,
+        account_id: user.account_id,
       },
     }),
   },
