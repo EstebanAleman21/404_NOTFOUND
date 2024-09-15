@@ -56,6 +56,7 @@ export default function CategorySelectorComponent() {
             !categories.includes(cat) || categories[index] === cat
         )
     
+        
     const updateUserCategoriesInDB = async (newCategories: string[]) => {
         try {
             const response = await fetch('api/update-user-categories', {

@@ -18,7 +18,11 @@ export async function GET() {
       select: { categories: true },
     });
 
+    console.log('User data:', user);
+
     const categories = user?.categories ?? [];
+
+    console.log('Categories:', categories);
 
     return NextResponse.json({ categories });
 
