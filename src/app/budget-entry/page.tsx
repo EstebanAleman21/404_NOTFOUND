@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "~/components/ui/card"
+import { getSession } from 'next-auth/react'
 
 type Budget = {
   id: string;
@@ -15,6 +16,7 @@ type Budget = {
 
 export default function BudgetEntry() {
   const [budgets, setBudgets] = useState<Budget[]>([])
+  const [balance, setBalance] = useState<number>(0)
 
   const fetchActiveBudgets = async () => {
     try {
@@ -26,6 +28,20 @@ export default function BudgetEntry() {
       setBudgets(data)
     } catch (error) {
       console.error('Error fetching budgets:', error)
+    }
+  }
+
+  const fetchBalance = async () => {
+    const session = await getSession()
+    try {
+      const response = await fetch(`/api/get-balance?accountId=${session?.user.account_id}`)
+      if (!response.ok) {
+        throw new Error(`Failed to fetch balance. Status: ${response.status}`)
+      }
+      const data = await response.json()
+      setBalance(data.balance.toFixed(2))
+    } catch (error) {
+      console.error('Error fetching balance:', error)
     }
   }
 
@@ -47,12 +63,13 @@ export default function BudgetEntry() {
   }
 
   useEffect(() => {
-    const updateAndFetchBudgets = async () => {
+    const updateAndFetchData = async () => {
       await updateBudgetStatus()
       await fetchActiveBudgets()
+      await fetchBalance()
     }
-    updateAndFetchBudgets().catch(error => {
-      console.error('Error updating and fetching budgets:', error)
+    updateAndFetchData().catch(error => {
+      console.error('Error updating and fetching data:', error)
     });
   }, [])
 
@@ -87,6 +104,7 @@ export default function BudgetEntry() {
   }
 
   const totalBudget = budgets.reduce((sum, budget) => sum + budget.amount, 0)
+  const remainingBalance = balance - totalBudget
 
   return (
     <div className="container mx-auto p-4">
@@ -125,6 +143,12 @@ export default function BudgetEntry() {
           <CardContent className="flex justify-between items-center">
             <CardTitle>Total Budget</CardTitle>
             <span className="text-xl font-bold">${totalBudget.toFixed(2)}</span>
+          </CardContent>
+        </Card>
+        <Card className='mt-7'>
+          <CardContent className="flex justify-between items-center">
+            <CardTitle>Remaining Balance</CardTitle>
+            <span className="text-xl font-bold">${remainingBalance.toFixed(2)}</span>
           </CardContent>
         </Card>
         <CardFooter className="flex justify-end mt-4">
