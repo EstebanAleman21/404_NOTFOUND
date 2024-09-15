@@ -24,6 +24,8 @@ export default function MinimalistCardDashboard() {
   const [balance, setBalance] = useState(0); // State to store the fetched balance
   const [rewards, setRewards] = useState(0); // State to store the fetched rewards
   const [loading, setLoading] = useState(true); // State to handle loading
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [recentTransactions, setRecentTransactions] = useState<any[]>([]);
   const [hoveredSegment, setHoveredSegment] = useState<string | null>(null); // State to store the hovered segment
 
   // Fetch the balance when the accountId is available
@@ -42,6 +44,20 @@ export default function MinimalistCardDashboard() {
               `Failed to fetch balance. Status: ${response.status}`,
             );
           }
+
+          // Fetch transactions
+          const transactionsResponse = await fetch(
+            `/api/get-transactions?accountId=${accountId}`,
+          );
+
+          if (!transactionsResponse.ok) {
+            throw new Error(
+              `Failed to fetch transactions. Status: ${transactionsResponse.status}`,
+            );
+          }
+
+          const transactionsData = await transactionsResponse.json();
+          setRecentTransactions(transactionsData);
 
           const balanceData = await response.json();
           setBalance(balanceData.balance || 0);
@@ -91,14 +107,6 @@ export default function MinimalistCardDashboard() {
   const handlePieLeave = () => {
     setHoveredSegment(null);
   };
-
-  const recentTransactions = [
-    { id: 1, name: "Payment to John Doe", amount: 500, type: "debit" },
-    { id: 2, name: "Payment to Jane Doe", amount: 700, type: "debit" },
-    { id: 3, name: "Payment from Acme Inc", amount: 1200, type: "credit" },
-    { id: 4, name: "Payment to XYZ Corp", amount: 300, type: "debit" },
-    { id: 5, name: "Payment to ABC Ltd", amount: 800, type: "debit" },
-  ]; // Mock data for recent transactions
 
   // Mock data for the revenue chart
   const revenueData = [
@@ -155,11 +163,11 @@ export default function MinimalistCardDashboard() {
         <Card className="bg-white shadow-sm transition-shadow duration-300 hover:shadow-md">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-normal text-gray-500">
-              Active Users
+              Saved Amount this month
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-light text-gray-800">573</div>
+            <div className="text-3xl font-light text-gray-800">10%</div>
           </CardContent>
         </Card>
       </div>
@@ -285,29 +293,34 @@ export default function MinimalistCardDashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {recentTransactions.map((transaction) => (
-              <div
-                key={transaction.id}
-                className="flex items-center justify-between border-b border-gray-100 pb-4 last:border-b-0 last:pb-0"
-              >
-                <div>
-                  <p className="text-sm text-gray-800">{transaction.name}</p>
-                  <p className="text-xs text-gray-500">
-                    {transaction.type === "credit" ? "Received" : "Paid"}
-                  </p>
-                </div>
+            {recentTransactions.length > 0 ? (
+              recentTransactions.map((transaction) => (
                 <div
-                  className={`font-light ${
-                    transaction.type === "credit"
-                      ? "text-green-600"
-                      : "text-red-600"
-                  }`}
+                  key={transaction._id}
+                  className="flex items-center justify-between border-b border-gray-100 pb-4 last:border-b-0 last:pb-0"
                 >
-                  {transaction.type === "credit" ? "+" : "-"}$
-                  {transaction.amount}
+                  <div>
+                    <p className="text-sm text-gray-800">
+                      {transaction.description}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {transaction.status === "executed" ? "Paid" : "Pending"}
+                    </p>
+                  </div>
+                  <div
+                    className={`font-light ${
+                      transaction.status === "executed"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    ${transaction.amount}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p>No recent transactions available.</p>
+            )}
           </div>
         </CardContent>
       </Card>
