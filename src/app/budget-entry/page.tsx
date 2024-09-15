@@ -6,63 +6,66 @@ import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "~/components/ui/card"
 
-type Budget = Record<number, number>
+type Budget = {
+  id: string;
+  amount: number;
+  period: string;
+  category: string;
+}
 
 export default function BudgetEntry() {
-  const [categories, setCategories] = useState<string[]>([])
-  const [budget, setBudget] = useState<Budget>({})
+  const [budgets, setBudgets] = useState<Budget[]>([])
 
-  const fetchUserCategories = async () => {
+  const fetchActiveBudgets = async () => {
     try {
-      const response = await fetch('/api/get-user-categories')
+      const response = await fetch('/api/get-active-budgets')
       if (!response.ok) {
-        throw new Error(`Failed to fetch categories. Status: ${response.status}`)
+        throw new Error(`Failed to fetch budgets. Status: ${response.status}`)
       }
-      const data: { categories: string[] } = await response.json()
-      setCategories(data.categories)
+      const data: Budget[] = await response.json()
+      setBudgets(data)
     } catch (error) {
-      console.error('Error fetching categories:', error)
+      console.error('Error fetching budgets:', error)
     }
   }
 
   useEffect(() => {
-    fetchUserCategories().catch(error => {
-      console.error('Error fetching categories:', error)
+    fetchActiveBudgets().catch(error => {
+      console.error('Error fetching budgets:', error)
     });
   }, [])
 
-  const handleBudgetChange = (categoryId: number, amount: string) => {
-    setBudget(prev => ({
-      ...prev,
-      [categoryId]: parseFloat(amount) || 0
-    }))
+  const handleBudgetChange = (budgetId: string, amount: string) => {
+    setBudgets(prev => prev.map(budget => 
+      budget.id === budgetId ? { ...budget, amount: parseFloat(amount) || 0 } : budget
+    ))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Submitted budget:', budget)
+    console.log('Submitted budgets:', budgets)
     // Aquí normalmente enviarías estos datos a tu backend
   }
 
-  const totalBudget = Object.values(budget).reduce((sum, amount) => sum + amount, 0)
+  const totalBudget = budgets.reduce((sum, budget) => sum + budget.amount, 0)
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Enter Your Budget</h1>
       <form onSubmit={handleSubmit}>
-        {Array.isArray(categories) && categories.length > 0 ? (
-          categories.map((category, index) => (
-            <Card key={index} className="mb-4">
+        {budgets.length > 0 ? (
+          budgets.map((budget) => (
+            <Card key={budget.id} className="mb-4">
               <CardHeader>
-                <CardTitle>{category}</CardTitle>
+                <CardTitle>{budget.category}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center">
                   <Input
                     type="number"
                     placeholder="Enter amount"
-                    value={budget[index] ?? ''}
-                    onChange={(e) => handleBudgetChange(index, e.target.value)}
+                    value={budget.amount}
+                    onChange={(e) => handleBudgetChange(budget.id, e.target.value)}
                     className="mr-2"
                   />
                   <span className="text-sm text-gray-500">$</span>
@@ -71,7 +74,7 @@ export default function BudgetEntry() {
             </Card>
           ))
         ) : (
-          <p>No categories available</p>
+          <p>No budgets available</p>
         )}
         <Card>
           <CardContent className="flex justify-between items-center">
