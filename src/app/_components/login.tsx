@@ -15,8 +15,8 @@ import {
 } from "~/components/ui/card";
 
 const login = () => {
-  const handleGoogleLogin = () => {
-    signIn("google", { callbackUrl: "/dashboard" }); // Redirect to '/dashboard' after successful login
+  const handleGoogleLogin = async () => {
+    await signIn("google", { callbackUrl: "/dashboard" }); // Redirect to '/dashboard' after successful login
   };
   return (
     <div>
